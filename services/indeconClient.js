@@ -7,7 +7,14 @@ const baseUrlApi = config.rest_endpoints.indecon;
 const getLast = async _ => {
 
     try {
-        
+        const path = `/last`
+        let response = await axios({
+            method: 'get',
+            url: baseUrlApi + path,
+        });
+        console.log("se consultó con éxito la api de indecon");
+        return response.data;
+
     } catch (error) {
         let err = new Error("Error al obtener información desde indecon");
         err.statusCode = 503;
@@ -17,22 +24,7 @@ const getLast = async _ => {
 
 const getHistoric = async (key) => {
 
-    let path = "search?" + qs.stringify(searchInfo);
-
-    try {
-        const headers = {
-            "Authorization": `Bearer ${authorizationInfo.access_token}`
-        };
-
-        const response = await axios.get(baseUrlApi + path, { headers })
-        return response.data;
-    }
-    catch (error) {
-        let err = new Error("Error al obtener álbumes desde spotify");
-        err.statusCode = 503;
-        throw err;
-    }
 }
 
-module.exports.search = search;
-module.exports.getToken = getToken;
+module.exports.getLast = getLast;
+module.exports.getHistoric = getHistoric;
