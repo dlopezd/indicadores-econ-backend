@@ -35,6 +35,11 @@ exports.last = async (req, res, next) => {
         res.send({ ok: true, error: null, data: lastInfo });
     }
     catch (error) {
+        var logContext = {
+            error: error.message,
+            path: req.path
+        };
+        console.error("ERROR. Context: " + JSON.stringify(logContext));
 
         if (!error.statusCode) {
             error.statusCode = 500;
@@ -44,17 +49,16 @@ exports.last = async (req, res, next) => {
 }
 
 exports.values = async (req, res, next) => {
+    const key = req.params.key;
+    let from = req.query.from;
+    let to = req.query.to;
+
     try {
-        if (!req.params.key) {
-            let error = new Error("Debe señalar el indicador económico.");
-            error.statusCode = 400;
-            next(error);
-        }
-        const key = req.params.key;
-        if (!util.keys.some(k => k === key)) {
+
+        if (!util.keys.some(k => k === key.toString())) {
             let error = new Error("Key inválida.");
             error.statusCode = 400;
-            next(error);
+            throw error;
         }
 
         const lastDate = util.frecuency[key] === "daily" ?
@@ -70,9 +74,6 @@ exports.values = async (req, res, next) => {
         }
 
         // filtrado de los datos
-        let from = req.query.from;
-        let to = req.query.to;
-
         if (!from) {
             from = moment.utc("0001-01-01").unix();
         }
@@ -80,7 +81,7 @@ exports.values = async (req, res, next) => {
             to = moment().startOf('day').unix();
         }
         console.log(`FROM: ${from} - TO:${to}`);
-        
+
 
         valuesUntilToday = valuesUntilToday.filter(r => {
             if (r.date >= from && r.date <= to) {
@@ -98,6 +99,16 @@ exports.values = async (req, res, next) => {
         res.send({ ok: true, error: null, data: response });
     }
     catch (error) {
+        var logContext = {
+            error: error.message,
+            path: req.path,
+            key: key,
+            query: {
+                from: from,
+                to: to
+            }
+        };
+        console.error("ERROR. Context: " + JSON.stringify(logContext));
 
         if (!error.statusCode) {
             error.statusCode = 500;
