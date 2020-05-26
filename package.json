@@ -1,0 +1,31 @@
+{
+  "name": "backend-spotify",
+  "version": "1.0.0",
+  "description": "Backend para consultar álbumes en Spotify",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dlopezd/backend-spotify.git"
+  },
+  "author": "Daniel López",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dlopezd/backend-spotify/issues"
+  },
+  "homepage": "https://github.com/dlopezd/backend-spotify#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "config": "^3.3.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "memory-cache": "^0.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
