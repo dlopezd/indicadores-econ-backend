@@ -8,7 +8,7 @@ const util = require('../Utils/Util');
 exports.last = async (req, res, next) => {
     try {
         const today = moment().startOf('day');
-        const keyCache = `LAST-${today.seconds()}`
+        const keyCache = `LAST-${today.unix()}`
 
         let lastInfo = cache.get(keyCache);
         if (!lastInfo) {
@@ -50,12 +50,17 @@ exports.values = async (req, res, next) => {
             error.statusCode = 400;
             next(error);
         }
-
         const key = req.params.key;
+        if (!util.keys.some(k => k === key)) {
+            let error = new Error("Key inválida.");
+            error.statusCode = 400;
+            next(error);
+        }
+
         const lastDate = util.frecuency[key] === "daily" ?
             moment().startOf('day') :
             moment().startOf('month');
-        const keyCache = `${key}-${lastDate.seconds()}`
+        const keyCache = `${key}-${lastDate.unix()}`
         // rescate de los datos desde caché o api
         let valuesUntilToday = cache.get(keyCache);
         if (!valuesUntilToday) {
@@ -69,22 +74,16 @@ exports.values = async (req, res, next) => {
         let to = req.query.to;
 
         if (!from) {
-            from = moment.utc("0001-01-01");
-        }
-        else {
-            from = moment.unix(from);
+            from = moment.utc("0001-01-01").unix();
         }
         if (!to) {
-            to = moment().startOf('day');
+            to = moment().startOf('day').unix();
         }
-        else {
-            to = moment.unix(to);
-        }
+        console.log(`FROM: ${from} - TO:${to}`);
+        
 
         valuesUntilToday = valuesUntilToday.filter(r => {
-            let date = moment.unix(r.date);
-            if ((date.isAfter(from) || date.isSame(from)) &&
-                (date.isBefore(to) || date.isSame(to))) {
+            if (r.date >= from && r.date <= to) {
                 return r;
             }
         });
