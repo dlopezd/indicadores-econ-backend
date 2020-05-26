@@ -89,11 +89,14 @@ exports.values = async (req, res, next) => {
             }
         });
 
+        const length = valuesUntilToday.length;
+        const response = {
+            min_date: valuesUntilToday[0] ? valuesUntilToday[0].date : null,
+            max_date: valuesUntilToday[length - 1] ? valuesUntilToday[length - 1].date : null,
+            values: valuesUntilToday
+        }
 
-
-
-
-        res.send({ ok: true, error: null, data: valuesUntilToday });
+        res.send({ ok: true, error: null, data: response });
     }
     catch (error) {
 
