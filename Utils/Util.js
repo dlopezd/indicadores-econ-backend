@@ -12,15 +12,24 @@ frecuency['utm'] = "monthly";
 exports.frecuency = frecuency;
 
 const convertToArray = o => {
-    const array = []
-    Object.keys(o).forEach(function (key) {
-        const newObject = { date: Number(key), rate: o[key] };
-        array.push(newObject);
-    });
-    return array;
+    try {
+        const array = []
+        Object.keys(o).forEach(function (key) {
+            const value = Number(o[key]);
+            if (!value) { throw new Error("Formato incorrecto."); }
+            const newObject = { date: Number(key), rate: value };
+            array.push(newObject);
+        });
+        return array;
+    }
+    catch (error) {
+        let err = new Error("Respuesta de indecon sin el formato correcto.")
+        err.statusCode = 500;
+        throw err;
+    }
 }
 exports.convertToArray = convertToArray;
 
 
-const keys = ["cobre","dolar","euro","ipc","ivp","oro","plata","uf","utm","yen"];
+const keys = ["cobre", "dolar", "euro", "ipc", "ivp", "oro", "plata", "uf", "utm", "yen"];
 exports.keys = keys;

@@ -17,16 +17,15 @@ server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 server.use(cors())
 server.use(indicadoresRouter);
 server.use(otherRoutes);
-
-const serverHttp = http.createServer(server);
-server.use(express.json());
-
 server.use((err, req, res, next) => {
   if (!err.statusCode) {
     err.statusCode = 500;
   }
   res.status(err.statusCode).send({ ok: false, error: err.message, data: null })
 })
+
+const serverHttp = http.createServer(server);
+server.use(express.json());
 
 serverHttp.listen(3000, () => {
   const host = serverHttp.address().address;
