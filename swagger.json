@@ -1,0 +1,284 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Esta API proporciona los valores de los siguientes Indicadores Económicos: dólar, euro, yen, oro, plata, cobre, uf, utm, ipc e ivp.",
+        "version": "1.0.0",
+        "title": "Indicadores económicos",
+        "contact": {
+            "email": "dlopezd4@gmail.com"
+        }
+    },
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/last": {
+            "get": {
+                "tags": [
+                    "indicadores económicos"
+                ],
+                "summary": "Obtiene los últimos valores de los indicadores mencionados previamente",
+                "description": "",
+                "operationId": "last",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa.",
+                        "schema": {
+                            "$ref": "#/definitions/WrapperLast"
+                        }
+                    },
+                    "500": {
+                        "description": "En caso no controlado.",
+                        "schema": {
+                            "$ref": "#/definitions/WrapperError"
+                        }
+                    },
+                    "503": {
+                        "description": "En caso de que la api indecon no esté disponible.",
+                        "schema": {
+                            "$ref": "#/definitions/WrapperError"
+                        }
+                    }
+                }
+            }
+        },
+        "/values/{key}": {
+            "get": {
+                "tags": [
+                    "indicadores económicos"
+                ],
+                "summary": "Obtiene los valores históricos para un indicador económico, dado un rango de fechas.",
+                "operationId": "values",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "description": "Indicador económico del que se consulta el histórico.",
+                        "required": true,
+                        "type": "string",
+                        "enum": [
+                            "dolar",
+                            "euro",
+                            "yen",
+                            "oro",
+                            "plata",
+                            "cobre",
+                            "utm",
+                            "uf",
+                            "ipc",
+                            "ivp"
+                        ]
+
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Fecha DESDE la que se filtrarán los valores. Debe ser en formato unix.",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "Fecha HASTA la que se filtrarán los valores. Debe ser en formato unix.",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa.",
+                        "schema": {
+                            "$ref": "#/definitions/WrapperLast"
+                        }
+                    },
+                    "400": {
+                        "description": "En caso de que la key no sea una de las opciones posibles.",
+                        "schema": {
+                            "$ref": "#/definitions/WrapperError"
+                        }
+                    },
+                    "500": {
+                        "description": "En caso no controlado.",
+                        "schema": {
+                            "$ref": "#/definitions/WrapperError"
+                        }
+                    },
+                    "503": {
+                        "description": "En caso de que la api indecon no esté disponible.",
+                        "schema": {
+                            "$ref": "#/definitions/WrapperError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "WrapperLast": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "boolean",
+                    "description": "Resultado de la consulta."
+                },
+                "error": {
+                    "type": "string",
+                    "description": "Mensaje descriptivo del error en caso de que lo hubiera."
+                },
+                "data": {
+                    "$ref": "#/definitions/Resumen"
+                }
+            }
+        },
+        "Resumen": {
+            "type": "object",
+            "properties": {
+                "cobre": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "dolar": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "euro": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "ipc": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "ivp": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "oro": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "plata": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "uf": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "utm": {
+                    "$ref": "#/definitions/Indicador"
+                },
+                "yen": {
+                    "$ref": "#/definitions/Indicador"
+                }
+            }
+        },
+        "Indicador": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string",
+                    "description": "Alguno de los indicadores económicos.",
+                    "enum": [
+                        "dolar",
+                        "euro",
+                        "yen",
+                        "oro",
+                        "plata",
+                        "cobre",
+                        "utm",
+                        "uf",
+                        "ipc",
+                        "ivp"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Reseña del indicador económico."
+                },
+                "unit": {
+                    "type": "string",
+                    "description": "Unidad en la que se mide el indicador económico."
+                },
+                "date": {
+                    "type": "integer",
+                    "description": "Fecha en formato unix del indicador.",
+                    "format": "int64"
+                },
+                "value": {
+                    "description": "Valor del indicador económico.",
+                    "type": "number"
+                },
+                "frecuency": {
+                    "description": "Frecuencia con la que se actualiza el indicador económico.",
+                    "type": "string"
+                }
+            }
+        },
+        "WrapperHistorico": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "boolean",
+                    "description": "Resultado de la consulta."
+                },
+                "error": {
+                    "type": "string",
+                    "description": "Mensaje descriptivo del error en caso de que lo hubiera."
+                },
+                "data": {
+                    "$ref": "#/definitions/Historico"
+                }
+            }
+        },
+        "Historico": {
+            "type": "object",
+            "properties": {
+                "min_date": {
+                    "type": "integer",
+                    "description": "Es la menor fecha de la lista de movimientos."
+                },
+                "max_date": {
+                    "type": "integer",
+                    "description": "Es la menor fecha de la lista de movimientos."
+                },
+                "values": {
+                    "type": "array",
+                    "description": "Lista de valores que conforman el histórico.",
+                    "items": {
+                        "$ref": "#/definitions/ItemHistorico"
+                    }
+                }
+            }
+        },
+        "ItemHistorico": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "integer",
+                    "description": "Fecha del registro."
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Valor del indicador económico."
+                }
+            }
+        },
+        "WrapperError": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Resultado de la consulta."
+                },
+                "error": {
+                    "type": "string",
+                    "description": "Mensaje descriptivo del error en caso de que lo hubiera."
+                },
+                "data": {
+                    "description": "En caso de error, data será null",
+                    "type": "object",
+                    "default": null
+                }
+            }
+        }
+    }
+}

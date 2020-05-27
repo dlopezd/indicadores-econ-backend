@@ -1,6 +1,7 @@
 const config = require('config');
 const express = require('express');
 const http = require('http');
+const swaggerUi = require('swagger-ui-express');
 var cors = require('cors')
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -10,6 +11,9 @@ const otherRoutes = require('./routes/otherRoutes')
 
 const server = express();
 
+
+const swaggerDocument = require('./swagger.json');
+server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 server.use(cors())
 server.use(indicadoresRouter);
 server.use(otherRoutes);

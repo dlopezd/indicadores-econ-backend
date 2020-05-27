@@ -80,9 +80,6 @@ exports.values = async (req, res, next) => {
         if (!to) {
             to = moment().startOf('day').unix();
         }
-        console.log(`FROM: ${from} - TO:${to}`);
-
-
         valuesUntilToday = valuesUntilToday.filter(r => {
             if (r.date >= from && r.date <= to) {
                 return r;
