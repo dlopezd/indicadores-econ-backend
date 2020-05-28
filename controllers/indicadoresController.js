@@ -31,8 +31,9 @@ exports.last = async (req, res, next) => {
             // tiempo de la caché
             cache.put(keyCache, lastInfo, 7200000);
         }
-
-        res.send({ ok: true, error: null, data: lastInfo });
+        const response = { ok: true, error: null, data: lastInfo };
+        res.send(response);
+        return response;
     }
     catch (error) {
         var logContext = {
@@ -45,6 +46,7 @@ exports.last = async (req, res, next) => {
             error.statusCode = 500;
         }
         next(error);
+        return error;
     }
 }
 
@@ -93,7 +95,9 @@ exports.values = async (req, res, next) => {
             values: valuesUntilToday
         }
 
-        res.send({ ok: true, error: null, data: response });
+        const wrapper = { ok: true, error: null, data: response };
+        res.send(wrapper);
+        return wrapper;
     }
     catch (error) {
         var logContext = {
@@ -111,5 +115,6 @@ exports.values = async (req, res, next) => {
             error.statusCode = 500;
         }
         next(error);
+        return error;
     }
 }

@@ -27,7 +27,7 @@ server.use((err, req, res, next) => {
 const serverHttp = http.createServer(server);
 server.use(express.json());
 
-serverHttp.listen(3000, () => {
+serverHttp.listen(2000, () => {
   const host = serverHttp.address().address;
   const port = serverHttp.address().port;
   console.log('Server run at http://%s:%s', host, port);
