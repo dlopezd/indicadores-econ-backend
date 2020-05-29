@@ -2,6 +2,7 @@
 Es una aplicación desarrollada en Node.js que consume los servicios de indecon para obtener indicadores económicos. Las dos principales funciones desarrolladas son:
   - Obtener el último estado de ciertos indicadores.
   - Ver el histórico de valores de un indicador en particular, permite filtro por fechas.
+  - Documentación de la API disponible en el path ```/swagger```
 
 ## Características!
   - La primera vez que se le solicita cierta información la consulta a la api de indecon y cachea la respuesta por 2 hrs.
